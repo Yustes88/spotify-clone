@@ -9,6 +9,7 @@ import useAuthModal from "@/hooks/useAuthModal";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useUser } from "@/hooks/useUser";
 import { FaUserAlt } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 type HeaderProps = {
   children: React.ReactNode;
@@ -32,7 +33,9 @@ const Header:React.FC<HeaderProps> = ({
     router.refresh()
 
     if(error) {
-      console.log(error)
+      toast.error(error.message)
+    } else {
+      toast.success('Logged out!')
     }
   }
   return (  
