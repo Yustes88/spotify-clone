@@ -6,6 +6,9 @@ import { HiHome } from 'react-icons/hi';
 import { BiSearch } from "react-icons/bi";
 import Button from "./Button";
 import useAuthModal from "@/hooks/useAuthModal";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useUser } from "@/hooks/useUser";
+import { FaUserAlt } from "react-icons/fa";
 
 type HeaderProps = {
   children: React.ReactNode;
@@ -20,8 +23,17 @@ const Header:React.FC<HeaderProps> = ({
   const authModal = useAuthModal()
   const router = useRouter()
 
-  const handleLogout = () => {
+  const supabaseClient = useSupabaseClient()
+  const { user, subscription } = useUser()
 
+  const handleLogout = async () => {
+    const {error} = await supabaseClient.auth.signOut()
+
+    router.refresh()
+
+    if(error) {
+      console.log(error)
+    }
   }
   return (  
     <div className={twMerge(`h-fit bg-gradient-to-b from-emerald-800 p-6`, className)}>
@@ -47,6 +59,26 @@ const Header:React.FC<HeaderProps> = ({
           </button>
         </div>
         <div className="flex justify-between items-centergap-x-4">
+          {user ? (
+            <div className="
+            flex gap-x-4 items-center
+            ">
+              <Button 
+              onClick={handleLogout}
+              className="
+              bg-white
+              px-6
+              py-2  
+              ">
+                Logout
+                </Button> 
+                <Button onClick={() => router.push('/account')}
+                className="bg-white"
+                >
+                  <FaUserAlt/>
+                </Button>
+              </div>
+          ) : (
           <>
           <div>
             <Button 
@@ -63,6 +95,7 @@ const Header:React.FC<HeaderProps> = ({
             </Button>
           </div>
           </>
+          )}
         </div>
       </div>
       {children}
