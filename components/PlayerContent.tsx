@@ -9,7 +9,8 @@ import {HiSpeakerXMark, HiSpeakerWave} from 'react-icons/hi2'
 import { AiFillStepBackward, AiFillStepForward } from "react-icons/ai";
 import Slider from "./Slider";
 import usePlayer from "@/hooks/usePlayer";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useSound from "use-sound";
 
 type PlayerContentProps = {
   song: Song;
@@ -60,6 +61,42 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
     player.setId(previousSong)
 
   }
+
+  const [play, { pause, sound}] = useSound(
+    songUrl,
+    {volume: volume,
+    onplay: () => setIsPlaying(true),
+    onend: () => {
+      setIsPlaying(false);
+      onPlayNext();
+    },
+    onpause: () => setIsPlaying(false),
+    format: ['mp3']
+    }
+  );
+
+  useEffect(() => {
+    sound?.play()
+
+    return () => sound?.unload();
+  }, [sound])
+
+  const handlePlay = () => {
+    if(!isPlaying) {
+      play();
+    } else{
+      pause();
+    }
+  }
+
+  const toggleMute = () => {
+    if(volume === 0) {
+      setVolume(1)
+    } else {
+      setVolume(0)
+    }
+  }
+
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 h-full">
       <div className="flex w-full justify-start">
@@ -82,8 +119,8 @@ const PlayerContent: React.FC<PlayerContentProps> = ({
       </div>
       <div className="hidden md:flex w-full justify-end pr-2">
         <div className="flex items-center gap-x-2 w-[120px]">
-          <VolumeIcon onClick = {() => {}} size={34} className = 'cursor-pointer'/>
-          <Slider/>
+          <VolumeIcon onClick = {toggleMute} size={34} className = 'cursor-pointer'/>
+          <Slider value={volume} onChange={(value) => setVolume(value)}/>
         </div>
       </div>
     </div>
