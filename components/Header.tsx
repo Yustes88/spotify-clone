@@ -45,12 +45,12 @@ const Header:React.FC<HeaderProps> = ({
           <button 
           onClick={()=> router.back()}
           className="rounded-full bg-black flex items-center justify-center hover:opacity-75 transition">
-            <RxCaretLeft size={35} clssName='text-white'/>
+            <RxCaretLeft size={35} className='text-white'/>
           </button>
           <button 
           onClick={() => router.forward()}
           className="rounded-full bg-black flex items-center justify-center hover:opacity-75 transition">
-            <RxCaretRight size={35} clssName='text-white'/>
+            <RxCaretRight size={35} className='text-white'/>
           </button>
         </div>
         <div className="flex md:hidden gap-x-2 items-center">
