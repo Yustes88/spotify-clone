@@ -1,4 +1,4 @@
-import Stripe from 'stripe'
+import Stripe from 'stripe';
 
 export type Song = {
   id: string;
@@ -7,16 +7,6 @@ export type Song = {
   title: string;
   song_path: string;
   image_path: string;
-}
-
-export type UserDetails = {
-  id: string;
-  first_name: string;
-  last_name: string;
-  full_name?: string;
-  avatar_url?: string;
-  billing_address?: Stripe.Address;
-  payment_method?: Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
 }
 
 export type Product = {
@@ -43,10 +33,29 @@ export type Price = {
   products?: Product;
 }
 
-export type Subscription = {
+export type Customer = {
+  id: string;
+  stripe_customer_id?: string;
+}
+
+export type UserDetails = {
+  id: string;
+  first_name: string;
+  last_name: string;
+  full_name?: string;
+  avatar_url?: string;
+  billing_address?: Stripe.Address;
+  payment_method?: Stripe.PaymentMethod[Stripe.PaymentMethod.Type];
+}
+
+export interface ProductWithPrice extends Product {
+  prices?: Price[];
+}
+
+export interface Subscription {
   id: string;
   user_id: string;
-  sratus?: Stripe.Subscription.Status;
+  status?: Stripe.Subscription.Status;
   metadata?: Stripe.Metadata;
   price_id?: string;
   quantity?: number;
@@ -58,6 +67,6 @@ export type Subscription = {
   cancel_at?: string;
   canceled_at?: string;
   trial_start?: string;
-  trial_end: string;
-  prices: Price;
+  trial_end?: string;
+  prices?: Price;
 }
